@@ -1,5 +1,5 @@
 
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { Helmet } from 'react-helmet'
 import {pb } from '../lib/pocketbase'
@@ -14,9 +14,10 @@ import { useNavigate } from 'react-router-dom'
 const Login:FC = () => {
 
   const [error, setError] = useState<string | undefined>();
-  const user = useSelector((state: RootState) => state.user.userData)
+  const user = useSelector((state: RootState) => state.userData)
   const dispatch = useDispatch()
   const navigate = useNavigate();
+
 
   const handleLogin = async (username: string, password: string) => {
     await pb.collection('users').authWithPassword(username, password).then((value) => {
@@ -27,6 +28,12 @@ const Login:FC = () => {
       setError('Incorrect, please provide valid credentials to access data term');
     });
   }
+
+  useEffect(() => {
+   if (user) {
+    navigate("/character")
+   } 
+  })
 
   return (
     <div className="login-container">

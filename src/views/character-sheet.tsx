@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 
-import {isEqual} from 'lodash'
 import { Helmet } from 'react-helmet'
 
 import NameBanner from '../components/name-banner'
@@ -13,12 +12,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../lib/store'
 import { useNavigate } from 'react-router-dom'
 import Character from '../types/characterType'
-import { isImportEqualsDeclaration } from 'typescript'
+import { set } from 'lodash'
+
+const calculateMaxHitPoints = (statBody: number, statWill: number) => {
+  console.log('average ' + (statBody+statWill)/2)
+  return (10 + (Math.ceil((statBody+statWill)/2) * 5))
+}
+
+// TODO: Add cyberware modifications
+const calcuateMaxHumanity = (statEmpMax: number) => {
+  return statEmpMax * 10;
+}
 
 const CharacterSheet:FC = () => {
   // pb.authStore.clear()
   // console.log(pb.authStore.model)
-  const user = useSelector((state: RootState) => state.user.userData)
+  const user = useSelector((state: RootState) => state.userData)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
@@ -28,28 +37,37 @@ const CharacterSheet:FC = () => {
   const updateCharacterData = (field: string, newValue: any) => {
     console.log('firing update: ' + field + ' ' + newValue)
     if (characterData && field in characterData) {
-      setCharacterData({...characterData, [field]: newValue})
+      const tempData = {...characterData, [field]: newValue}
+      if (field === 'statBody' || field === 'statWill') {
+        tempData.maxHitPoints = calculateMaxHitPoints(tempData.statBody, tempData.statWill)
+      }
+      else if(field === 'statEmpMax') {
+        tempData.maxHumanity = calcuateMaxHumanity(tempData.statEmpMax);
+      }
+      setCharacterData(tempData)
     }
   }
+
+
 
   useEffect(() => {
     console.log('current user: ' + JSON.stringify(user))
     if (!user) {
       navigate("/")
+      return
     }
     pb.collection('characters').getList(undefined, undefined, {
       filter: `user_id = "${user.id}"`
     }).then((value) => {
-      setLoading(false)
       setCharacterData(value.items[0] as unknown as Character);
+      setLoading(false)
     }).catch((err) => {
       console.log(err)
     })
   }, [navigate, user])
 
   useEffect(() => {
-    if (characterData) {
-        console.log(characterData)
+    if (characterData && !loading) {
         pb.collection('characters').update(characterData.id, characterData)
           .then((value) => {
             console.log('Successfully updated character: ', value)
@@ -89,9 +107,15 @@ const CharacterSheet:FC = () => {
           </div>
           <HealthCard 
             rootClassName="health-card-root-class-name"
+            updateCharacterData={updateCharacterData}
+            currentHitPoints={characterData.currentHitPoints}
+            maxHitPoints={characterData.maxHitPoints}
             bodyInjury1={characterData.bodyInjury1}
             bodyInjury2={characterData.bodyInjury2}
             headInjury={characterData.headInjury}
+            bodyInjury1QF={characterData.bodyInjury1QF}
+            bodyInjury2QF={characterData.bodyInjury2QF}
+            headInjuryQF={characterData.headInjuryQF}
             addiction1={characterData.addiction1}
             addiction2={characterData.addiction2}
             addiction3={characterData.addiction3}

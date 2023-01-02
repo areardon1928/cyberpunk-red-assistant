@@ -1,22 +1,81 @@
-import React, { FC, useState } from 'react'
+import { update } from 'lodash';
+import React, { FC, useEffect, useState } from 'react'
 
 import './health-card.css'
 
 interface HealthCardProps { 
   rootClassName: any; 
-  currentHitPoints?: string | undefined; 
-  maxHitPoints?: string | number | boolean | undefined;
+  updateCharacterData: Function;
+  currentHitPoints: number | undefined; 
+  maxHitPoints:  number | undefined;
   bodyInjury1: string | undefined;
   bodyInjury2: string | undefined;
   headInjury: string | undefined;
-  addiction1?: string | undefined; 
-  addiction2?: string | undefined; 
-  addiction3?: string | undefined; 
-  addiction4?: string | undefined 
+  bodyInjury1QF: boolean;
+  bodyInjury2QF: boolean;
+  headInjuryQF: boolean;
+  addiction1: string | undefined; 
+  addiction2: string | undefined; 
+  addiction3: string | undefined; 
+  addiction4: string | undefined 
+}
+
+interface HealthCardDisplayValues {
+  currentHitPoints: number | undefined; 
+  addiction1: string | undefined; 
+  addiction2: string | undefined; 
+  addiction3: string | undefined; 
+  addiction4: string | undefined 
 }
 
 const HealthCard:FC<HealthCardProps> = (props) => {
-  const [woundStatus, setWoundStatus] = useState<string>('HEALTHY')
+  const [woundStatus, setWoundStatus] = useState<string>('')
+  const [displayValues, setDisplayValues] = useState<HealthCardDisplayValues>(props)
+
+  const updateWoundStatus = () => {
+    if(props.currentHitPoints && props.maxHitPoints) {
+      if (props.currentHitPoints <= 0) {
+        setWoundStatus('MORTALLY_WOUNDED')
+      } 
+      else if (props.currentHitPoints <= (props.maxHitPoints/2)) {
+        setWoundStatus('SERIOUSLY_WOUNDED')
+      }
+      else if (props.currentHitPoints < props.maxHitPoints) {
+        setWoundStatus('LIGHTLY_WOUNDED')
+      } else {
+        setWoundStatus('HEALTHY')
+      }
+    }
+  }
+
+  const handleNumberInput = (value: string, field: string, min: number = 1, max: number = 20) => {
+    if (value.trim() === '') {
+      props.updateCharacterData(field, min)
+    } 
+    else {
+      const numValue = parseFloat(value)
+      console.log(numValue)
+      if (!isNaN(numValue) && numValue >= min && numValue <= max && numValue !== props[field as keyof HealthCardDisplayValues]) {
+        props.updateCharacterData(field, numValue)
+        updateWoundStatus()
+      } else {
+        setDisplayValues({...displayValues, [field]: props[field as keyof HealthCardDisplayValues]})
+      }
+    }
+  }
+
+  const handleStringInput = (value: string, field: string, maxLength = 10) => {
+    if (value !== props[field as keyof HealthCardDisplayValues] && value.length <= maxLength) {
+      props.updateCharacterData(field, value)
+    } 
+    else {
+      setDisplayValues({...displayValues, [field]: props[field as keyof HealthCardDisplayValues]})
+    }
+  }
+
+  useEffect(() => {
+    updateWoundStatus()
+  }, [props])
 
   return (
     <div className={`health-card-container ${props.rootClassName} `}>
@@ -33,8 +92,11 @@ const HealthCard:FC<HealthCardProps> = (props) => {
               <input
                 type="text"
                 id="humanity_current_input"
-                placeholder={props.currentHitPoints}
+                value={displayValues.currentHitPoints}
                 className="health-card-textinput input"
+                onBlur={(e) => handleNumberInput(e.target.value, 'currentHitPoints', -40, props.maxHitPoints)}
+                onChange={(e) => setDisplayValues({...displayValues, currentHitPoints: parseFloat(e.target.value)})}
+                onFocus = {(e) => e.target.select()}
               />
               <div className="health-card-container07">
                 <span className="health-card-text02">OUT OF</span>
@@ -59,6 +121,7 @@ const HealthCard:FC<HealthCardProps> = (props) => {
                   name="bodyInjury1"
                   className="health-card-select select"
                   value={props.bodyInjury1 ?? "none"}
+                  onChange={(e) => props.updateCharacterData('bodyInjury1', e.target.value)}
                 >
                   <option value="none" selected className="">
                     <span
@@ -107,6 +170,8 @@ const HealthCard:FC<HealthCardProps> = (props) => {
                 <select
                   name="bodyInjury2"
                   className="health-card-select1 select"
+                  value={props.bodyInjury2 ?? "none"}
+                  onChange={(e) => props.updateCharacterData('bodyInjury2', e.target.value)}
                 >
                   <option value="none" selected className="">
                     <span
@@ -152,6 +217,8 @@ const HealthCard:FC<HealthCardProps> = (props) => {
                 <select
                   name="bodyInjury2"
                   className="health-card-select2 select"
+                  value={props.headInjury ?? "none"}
+                  onChange={(e) => props.updateCharacterData('headInjury', e.target.value)}
                 >
                   <option value="none" selected className="">
                     <span
@@ -205,16 +272,25 @@ const HealthCard:FC<HealthCardProps> = (props) => {
                 <input
                   type="checkbox"
                   className="health-card-checkbox"
+                  checked={props.bodyInjury1QF}
+                  onChange={(e) => props.updateCharacterData('bodyInjury1QF', e.target.checked) }
                 />
               </div>
               <div className="health-card-container17">
                 <input
                   type="checkbox"
                   className="health-card-checkbox1"
+                  checked={props.bodyInjury2QF}
+                  onChange={(e) => props.updateCharacterData('bodyInjury2QF', e.target.checked) }
                 />
               </div>
               <div className="health-card-container18">
-                <input type="checkbox" className="health-card-checkbox2" />
+                <input 
+                  type="checkbox" 
+                  className="health-card-checkbox2" 
+                  checked={props.headInjuryQF}
+                  onChange={(e) => props.updateCharacterData('headInjuryQF', e.target.checked) }
+                />                
               </div>
             </div>
           </div>
@@ -226,27 +302,39 @@ const HealthCard:FC<HealthCardProps> = (props) => {
           </label>
           <input
             type="text"
-            id="humanity_current_input"
-            placeholder={props.addiction1}
+            id="addiction1_input"
+            value={displayValues.addiction1}
             className="health-card-textinput1 input"
+            onFocus={(e) => (e.target.select())}
+            onChange={(e) => (setDisplayValues({...displayValues, addiction1: e.target.value}))}
+            onBlur={(e) => handleStringInput(e.target.value, 'addiction1', 20)}
           />
           <input
             type="text"
-            id="humanity_current_input"
-            placeholder={props.addiction2}
+            id="addiction2_input"
+            value={displayValues.addiction2}
             className="health-card-textinput2 input"
+            onFocus={(e) => (e.target.select())}
+            onChange={(e) => (setDisplayValues({...displayValues, addiction2: e.target.value}))}
+            onBlur={(e) => handleStringInput(e.target.value, 'addiction2', 20)}
           />
           <input
             type="text"
-            id="humanity_current_input"
-            placeholder={props.addiction3}
+            id="addiction3_input"
+            value={displayValues.addiction3}
             className="health-card-textinput3 input"
+            onFocus={(e) => (e.target.select())}
+            onChange={(e) => (setDisplayValues({...displayValues, addiction3: e.target.value}))}
+            onBlur={(e) => handleStringInput(e.target.value, 'addiction3', 20)}
           />
           <input
             type="text"
             id="humanity_current_input"
-            placeholder={props.addiction4}
+            placeholder={displayValues.addiction4}
             className="health-card-textinput4 input"
+            onFocus={(e) => (e.target.select())}
+            onChange={(e) => (setDisplayValues({...displayValues, addiction4: e.target.value}))}
+            onBlur={(e) => handleStringInput(e.target.value, 'addiction4', 20)}
           />
         </div>
       </div>
@@ -256,11 +344,11 @@ const HealthCard:FC<HealthCardProps> = (props) => {
 
 HealthCard.defaultProps = {
   addiction3: '',
-  currentHitPoints: '0',
+  currentHitPoints: 0,
   rootClassName: '',
   addiction4: '',
   addiction1: '',
-  maxHitPoints: '0',
+  maxHitPoints: 0,
   addiction2: '',
 }
 

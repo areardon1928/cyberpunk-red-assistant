@@ -27,6 +27,9 @@ export default interface Character {
   bodyInjury1: string;
   bodyInjury2: string;
   headInjury: string;
+  bodyInjury1QF: boolean;
+  bodyInjury2QF: boolean;
+  headInjuryQF: boolean;
   addiction1: string;
   addiction2: string;
   addiction3: string;
