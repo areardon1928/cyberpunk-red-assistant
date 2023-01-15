@@ -5,7 +5,7 @@
   min-height: 100vh;
   align-items: flex-start;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   background-color: var(--dl-color-primarybackground-darkbackground);
 }
 .character-sheet-container1 {
@@ -24,8 +24,22 @@
   align-items: flex-start;
   flex-direction: column;
 }
+
+.character-sheet-container3 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 0px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
 @media(max-width: 479px) {
   .character-sheet-container1 {
+    flex-direction: column;
+  }
+  .character-sheet-container3 {
     flex-direction: column;
   }
 }

@@ -1,0 +1,64 @@
+.weapon-card-container {
+  width: 390px;
+  height: 285px;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.weapon-card-container1 {
+  flex: initial;
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  padding-top: 4px;
+  border-color: var(--dl-color-primaryelements-huh);
+  border-width: 4px;
+  padding-left: var(--dl-space-space-halfunit);
+  padding-right: 4px;
+  flex-direction: column;
+  padding-bottom: 4px;
+  justify-content: center;
+  background-color: var(--dl-color-primarybackground-700);
+  border-left-width: 4px;
+  border-bottom-width: 2px;
+}
+.weapon-card-text {
+  color: var(--dl-color-primaryelements-huh);
+  font-size: 20px;
+  align-self: flex-start;
+  font-style: normal;
+  font-family: Roboto Condensed;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.weapon-card-container2 {
+  gap: 0;
+  flex: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  border-color: var(--dl-color-primaryelements-huh);
+  border-width: 4px;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: var(--dl-color-primarybackground-700);
+  border-top-width: 0px;
+}
+.weapon-card-root-class-name {
+  margin-top: var(--dl-space-space-halfunit);
+  margin-left: var(--dl-space-space-halfunit);
+  margin-right: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+.weapon-card-root-class-name1 {
+  margin-top: var(--dl-space-space-halfunit);
+  margin-left: var(--dl-space-space-halfunit);
+  margin-right: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}

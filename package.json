@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "@types/react-helmet": "^6.1.6",
-    "@types/redux-persist": "^4.3.1"
+    "@types/redux-persist": "^4.3.1",
+    "dotenv": "^16.0.3"
   }
 }

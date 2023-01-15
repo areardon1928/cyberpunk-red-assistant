@@ -13,6 +13,7 @@ import { RootState } from '../lib/store'
 import { useNavigate } from 'react-router-dom'
 import Character from '../types/characterType'
 import { set } from 'lodash'
+import WeaponCard from '../components/weaponCard/weapon-card'
 
 const calculateMaxHitPoints = (statBody: number, statWill: number) => {
   console.log('average ' + (statBody+statWill)/2)
@@ -25,8 +26,6 @@ const calcuateMaxHumanity = (statEmpMax: number) => {
 }
 
 const CharacterSheet:FC = () => {
-  // pb.authStore.clear()
-  // console.log(pb.authStore.model)
   const user = useSelector((state: RootState) => state.userData)
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -86,7 +85,7 @@ const CharacterSheet:FC = () => {
       <meta property="og:title" content="Cyberpunk Character App" />
     </Helmet>
     {!loading && characterData &&
-
+    <>
         <div className="character-sheet-container1">
           <div className="character-sheet-container2">
             <NameBanner 
@@ -138,12 +137,15 @@ const CharacterSheet:FC = () => {
             rootClassName="primary-stat-card-root-class-name"
           />
         </div>
-
+        <div className="character-sheet-container3">
+          <WeaponCard  chracterId={characterData.id} rootClassName="weapon-card-root-class-name"></WeaponCard>
+        </div>
+    </>
     }
     {loading &&
       <h1>LOADING</h1>
     }
-      </div>
+    </div>
   )
 }
 
