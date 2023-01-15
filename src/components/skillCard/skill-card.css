@@ -1,0 +1,188 @@
+.skill-card-container {
+  scale: inherit;
+  width: auto;
+  height: auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: var(--dl-color-primarybackground-darkbackground);
+}
+.skill-card-container1 {
+  flex: initial;
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-start;
+  padding-top: 4px;
+  border-color: var(--dl-color-primaryelements-huh);
+  border-width: 4px;
+  padding-left: var(--dl-space-space-halfunit);
+  padding-right: 4px;
+  flex-direction: column;
+  padding-bottom: 4px;
+  justify-content: center;
+  background-color: var(--dl-color-primarybackground-700);
+  border-left-width: 4px;
+  border-bottom-width: 0PX;
+}
+.skill-card-text {
+  color: var(--dl-color-gray-white);
+  font-size: 20px;
+  align-self: flex-start;
+  font-style: normal;
+  font-family: Roboto Condensed;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.skill-card-container2 {
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  align-items: flex-start;
+  border-color: var(--dl-color-primaryelements-huh);
+  border-width: 4PX;
+  flex-direction: row;
+}
+.skill-card-skill-group-container1 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.skill-card-awareness-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-body-skills {
+  flex: 0 0 auto;
+  margin: 2px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-control-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-education-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-skill-group-container11 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.skill-card-fighting-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-performance-skills {
+  flex: 0 0 auto;
+  margin: 2px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-ranged-weapon-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-social-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-technique-skills {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.skill-card-root-class-name {
+  margin: var(--dl-space-space-halfunit);
+  align-self: flex-start;
+}
+@media(max-width: 1200px) {
+  .skill-card-container {
+    width: auto;
+    height: auto;
+    background-color: transparent;
+  }
+  .skill-card-awareness-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-body-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-control-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-education-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-fighting-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-performance-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-ranged-weapon-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-social-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+  .skill-card-technique-skills {
+    width: auto;
+    height: auto;
+    align-self: flex-start;
+    align-items: flex-end;
+  }
+}

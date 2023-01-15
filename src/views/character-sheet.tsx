@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import Character from '../types/characterType'
 import { set } from 'lodash'
 import WeaponCard from '../components/weaponCard/weapon-card'
+import SkillCard from '../components/skillCard/skill-card'
 
 const calculateMaxHitPoints = (statBody: number, statWill: number) => {
   console.log('average ' + (statBody+statWill)/2)
@@ -138,7 +139,12 @@ const CharacterSheet:FC = () => {
           />
         </div>
         <div className="character-sheet-container3">
-          <WeaponCard  chracterId={characterData.id} rootClassName="weapon-card-root-class-name"></WeaponCard>
+          <div className="character-sheet-container4">
+            <WeaponCard  chracterId={characterData.id} rootClassName="weapon-card-root-class-name"></WeaponCard>
+          </div>
+          <div className="character-sheet-container5">
+            <SkillCard chracterId={characterData.id} rootClassName="skill-card-root-class-name"></SkillCard>
+          </div>
         </div>
     </>
     }
