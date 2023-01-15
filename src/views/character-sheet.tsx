@@ -143,7 +143,20 @@ const CharacterSheet:FC = () => {
             <WeaponCard  chracterId={characterData.id} rootClassName="weapon-card-root-class-name"></WeaponCard>
           </div>
           <div className="character-sheet-container5">
-            <SkillCard chracterId={characterData.id} rootClassName="skill-card-root-class-name"></SkillCard>
+            <SkillCard 
+              characterId={characterData.id} 
+              rootClassName="skill-card-root-class-name"
+              statInt={characterData.statInt}
+              statMove={characterData.statMove}
+              statBody={characterData.statBody}
+              statCool={characterData.statCool}
+              statDex={characterData.statDex}
+              statEmpCurrent={characterData.statEmpCurrent}
+              statLuckCurrent={characterData.statLuckCurrent}
+              statRef={characterData.statRef}
+              statTech={characterData.statTech}
+              statWill={characterData.statWill}
+            />
           </div>
         </div>
     </>
