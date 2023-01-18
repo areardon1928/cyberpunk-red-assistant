@@ -30,6 +30,42 @@ interface SkillCardProps {
 const SkillCard:FC<SkillCardProps> = (props) => {
   const [skillList, setSkillList] = useState<SkillList>();
 
+  const updateSkillData = (skill: Skill, newSkill: boolean) => {
+    if (!newSkill) {
+      // If both are zero, delete the skill from the list
+      if (skill.modifier === 0 && skill.skillLevel === 0) {
+        pb.collection('characterSkills').delete(skill.id)
+          .then(() => {
+            console.log('Successfully deleted skill')
+            const tempSkills = {...skillList};
+            delete tempSkills[skill.name as keyof SkillList]
+            setSkillList(tempSkills as SkillList)
+          }).catch(err => {
+            console.log(err);
+          })
+          return;
+      }
+      pb.collection('characterSkills').update(skill.id, skill)
+        .then(value => {
+          console.log('Successfully updated skill, ', value)
+          setSkillList({...skillList, [value.name]: value as unknown as Skill} as SkillList)
+        }).catch(err => {
+          console.log(err)
+        })
+    } else {
+      // if (skill.modifier === 0 && skill.skillLevel === 0)
+      //   return;
+      pb.collection('characterSkills').create({...skill, characterId: props.characterId})
+        .then(value => {
+          console.log('Successfully created new skill ', value)
+          setSkillList({...skillList, [value.name]: value as unknown as Skill} as SkillList)
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+    
+  }
+
   useEffect(() => {
     pb.collection('characterSkills').getList(undefined, undefined, 
       {
@@ -42,6 +78,8 @@ const SkillCard:FC<SkillCardProps> = (props) => {
       })
       console.log(tempSkillList)
       setSkillList(tempSkillList as SkillList)
+    }).catch((err) => {
+      console.log(err)
     })
   }, [])
 
@@ -61,36 +99,31 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='WILL'
               primaryStatLevel={props.statWill}
               skillDisplayName='concentration'
-              skill={skillList?.concentration}
-            ></SkillRow>
+              skill={skillList?.concentration} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name1"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='conceal/reveal_object'
-              skill={skillList?.concealRevealObject}
-            ></SkillRow>
+              skill={skillList?.concealRevealObject} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name2"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='lip_reading'
-              skill={skillList?.lipReading}
-            ></SkillRow>
+              skill={skillList?.lipReading} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name4"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='perception'
-              skill={skillList?.perception}
-            ></SkillRow>
+              skill={skillList?.perception} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name3"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='tracking'
-              skill={skillList?.tracking}
-            ></SkillRow>
+              skill={skillList?.tracking} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
           <div className="skill-card-body-skills">
             <SkillHeader
@@ -102,43 +135,37 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='athletics'
-              skill={skillList?.athletics}
-            ></SkillRow>
+              skill={skillList?.athletics} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name12"
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='contortionist'
-              skill={skillList?.contortionist}
-            ></SkillRow>
+              skill={skillList?.contortionist} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name13"
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='dance'
-              skill={skillList?.dance}
-            ></SkillRow>
+              skill={skillList?.dance} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name16"
               primaryStatName='WILL'
               primaryStatLevel={props.statWill}
               skillDisplayName='endurance'
-              skill={skillList?.endurance}
-            ></SkillRow>
+              skill={skillList?.endurance} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name14"
               primaryStatName='WILL'
               primaryStatLevel={props.statWill}
               skillDisplayName='resist_torture/drugs'
-              skill={skillList?.resistTortureDrugs}
-            ></SkillRow>
+              skill={skillList?.resistTortureDrugs} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name15"
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='stealth'
-              skill={skillList?.stealth}
-            ></SkillRow>
+              skill={skillList?.stealth} updateSkillData={updateSkillData}            ></SkillRow>
   
           </div>
           <div className="skill-card-control-skills">
@@ -151,29 +178,25 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='drive_land_vehicle'
-              skill={skillList?.driveLandVehicle}
-            ></SkillRow>
+              skill={skillList?.driveLandVehicle} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name25"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='pilot_air_vehicle (x2)'
-              skill={skillList?.pilotAirVehicle}
-            ></SkillRow>
+              skill={skillList?.pilotAirVehicle} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name26"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='pilot_sea_vehicle'
-              skill={skillList?.pilotSeaVehicle}
-            ></SkillRow>
+              skill={skillList?.pilotSeaVehicle} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name27"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='riding'
-              skill={skillList?.riding}
-            ></SkillRow>
+              skill={skillList?.riding} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
           <div className="skill-card-education-skills">
             <SkillHeader
@@ -185,71 +208,61 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='accounting'
-              skill={skillList?.accounting}
-            ></SkillRow>
+              skill={skillList?.accounting} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name6"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='animal_handling'
-              skill={skillList?.animalHandling}
-            ></SkillRow>
+              skill={skillList?.animalHandling} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name7"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='bureaucracy'
-              skill={skillList?.bureaucracy}
-            ></SkillRow>
+              skill={skillList?.bureaucracy} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name8"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='business'
-              skill={skillList?.business}
-            ></SkillRow>
+              skill={skillList?.business} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name9"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='composition'
-              skill={skillList?.composition}
-            ></SkillRow>
+              skill={skillList?.composition} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name10"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='criminology'
-              skill={skillList?.criminology}
-            ></SkillRow>
+              skill={skillList?.criminology} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name17"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='cryptography'
-              skill={skillList?.cryptography}
-            ></SkillRow>
+              skill={skillList?.cryptography} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name18"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='deduction'
-              skill={skillList?.deduction}
-            ></SkillRow>
+              skill={skillList?.deduction} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name19"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='education'
-              skill={skillList?.education}
-            ></SkillRow>
+              skill={skillList?.education} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name21"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='gamble'
-              skill={skillList?.gamble}
-            ></SkillRow>
+              skill={skillList?.gamble} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name1"
             ></ParentSkillRow>
@@ -261,8 +274,7 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='library_search'
-              skill={skillList?.librarySearch}
-            ></SkillRow>
+              skill={skillList?.librarySearch} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name"
             ></ParentSkillRow>
@@ -280,15 +292,13 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='tactics'
-              skill={skillList?.tactics}
-            ></SkillRow>
+              skill={skillList?.tactics} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name23"
               primaryStatName='INT'
               primaryStatLevel={props.statInt}
               skillDisplayName='wilderness_survival'
-              skill={skillList?.wildernessSurvival}
-            ></SkillRow>
+              skill={skillList?.wildernessSurvival} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
         </div>
         <div className="skill-card-skill-group-container11">
@@ -302,15 +312,13 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='brawling'
-              skill={skillList?.brawling}
-            ></SkillRow>
+              skill={skillList?.brawling} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name31"
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='evasion'
-              skill={skillList?.evasion}
-            ></SkillRow>
+              skill={skillList?.evasion} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name6"
             ></ParentSkillRow>
@@ -322,8 +330,7 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='DEX'
               primaryStatLevel={props.statDex}
               skillDisplayName='melee_weapon'
-              skill={skillList?.meleeWeapon}
-            ></SkillRow>
+              skill={skillList?.meleeWeapon} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
           <div className="skill-card-performance-skills">
             <SkillHeader
@@ -335,8 +342,7 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='acting'
-              skill={skillList?.acting}
-            ></SkillRow>
+              skill={skillList?.acting} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name7"
             ></ParentSkillRow>
@@ -354,36 +360,31 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='archery'
-              skill={skillList?.archery}
-            ></SkillRow>
+              skill={skillList?.archery} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name40"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='autofire (x2)'
-              skill={skillList?.autofire}
-            ></SkillRow>
+              skill={skillList?.autofire} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name41"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='handgun'
-              skill={skillList?.handgun}
-            ></SkillRow>
+              skill={skillList?.handgun} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name42"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='heavy_weapons (x2)'
-              skill={skillList?.heavyWeapons}
-            ></SkillRow>
+              skill={skillList?.heavyWeapons} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name29"
               primaryStatName='REF'
               primaryStatLevel={props.statRef}
               skillDisplayName='shoulder_arms'
-              skill={skillList?.shoulderArms}
-            ></SkillRow>
+              skill={skillList?.shoulderArms} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
           <div className="skill-card-social-skills">
             <SkillHeader
@@ -395,64 +396,55 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='bribery'
-              skill={skillList?.bribery}
-            ></SkillRow>
+              skill={skillList?.bribery} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name44"
               primaryStatName='EMP'
               primaryStatLevel={props.statEmpCurrent}
               skillDisplayName='conversation'
-              skill={skillList?.conversation}
-            ></SkillRow>
+              skill={skillList?.conversation} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name45"
               primaryStatName='EMP'
               primaryStatLevel={props.statEmpCurrent}
               skillDisplayName='human_perception'
-              skill={skillList?.humanPerception}
-            ></SkillRow>
+              skill={skillList?.humanPerception} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name46"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='interrogation'
-              skill={skillList?.interrogation}
-            ></SkillRow>
+              skill={skillList?.interrogation} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name47"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='persuasion'
-              skill={skillList?.persuasion}
-            ></SkillRow>
+              skill={skillList?.persuasion} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name48"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='personal_grooming'
-              skill={skillList?.personalGrooming}
-            ></SkillRow>
+              skill={skillList?.personalGrooming} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name49"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='streetwise'
-              skill={skillList?.streetwise}
-            ></SkillRow>
+              skill={skillList?.streetwise} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name50"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='trading'
-              skill={skillList?.trading}
-            ></SkillRow>
+              skill={skillList?.trading} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name51"
               primaryStatName='COOL'
               primaryStatLevel={props.statCool}
               skillDisplayName='wardrobe_&_style'
-              skill={skillList?.wardrobeAndStyle}
-            ></SkillRow>
+              skill={skillList?.wardrobeAndStyle} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
           <div className="skill-card-technique-skills">
             <SkillHeader
@@ -464,106 +456,91 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='air_vehicle_tech'
-              skill={skillList?.airVehicleTech}
-            ></SkillRow>
+              skill={skillList?.airVehicleTech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name34"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='basic_tech'
-              skill={skillList?.basicTech}
-            ></SkillRow>
+              skill={skillList?.basicTech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name35"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='cybertech'
-              skill={skillList?.cybertech}
-            ></SkillRow>
+              skill={skillList?.cybertech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name36"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='demolitions (x2)'
-              skill={skillList?.demolitions}
-            ></SkillRow>
+              skill={skillList?.demolitions} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name37"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='electronics/security_tech (x2)'
-              skill={skillList?.electronicsSecurityTech}
-            ></SkillRow>
+              skill={skillList?.electronicsSecurityTech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name38"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='first_aid'
-              skill={skillList?.firstAid}
-            ></SkillRow>
+              skill={skillList?.firstAid} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name52"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='forgery'
-              skill={skillList?.forgery}
-            ></SkillRow>
+              skill={skillList?.forgery} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name53"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='land_vehicle_tech'
-              skill={skillList?.landVehicleTech}
-            ></SkillRow>
+              skill={skillList?.landVehicleTech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name54"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='paint/draw/sculpt'
-              skill={skillList?.paintDrawSculpt}
-            ></SkillRow>
+              skill={skillList?.paintDrawSculpt} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name55"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='paramedic (x2)'
-              skill={skillList?.paramedic}
-            ></SkillRow>
+              skill={skillList?.paramedic} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name56"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='photography/film'
-              skill={skillList?.photographyFilm}
-            ></SkillRow>
+              skill={skillList?.photographyFilm} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name57"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='pick_lock'
-              skill={skillList?.pickLock}
-            ></SkillRow>
+              skill={skillList?.pickLock} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name58"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='pick_pocket'
-              skill={skillList?.pickPocket}
-            ></SkillRow>
+              skill={skillList?.pickPocket} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name59"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='sea_vehicle_tech'
-              skill={skillList?.seaVehicleTech}
-            ></SkillRow>
+              skill={skillList?.seaVehicleTech} updateSkillData={updateSkillData}            ></SkillRow>
             <SkillRow
               rootClassName="skill-row-root-class-name60"
               primaryStatName='TECH'
               primaryStatLevel={props.statTech}
               skillDisplayName='weaponstech'
-              skill={skillList?.weaponstech}
-            ></SkillRow>
+              skill={skillList?.weaponstech} updateSkillData={updateSkillData}            ></SkillRow>
           </div>
         </div>
       </div>

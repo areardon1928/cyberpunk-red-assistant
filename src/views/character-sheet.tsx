@@ -15,6 +15,7 @@ import Character from '../types/characterType'
 import { set } from 'lodash'
 import WeaponCard from '../components/weaponCard/weapon-card'
 import SkillCard from '../components/skillCard/skill-card'
+import { logoutUser } from '../lib/userAuth'
 
 const calculateMaxHitPoints = (statBody: number, statWill: number) => {
   console.log('average ' + (statBody+statWill)/2)
@@ -56,9 +57,17 @@ const CharacterSheet:FC = () => {
       navigate("/")
       return
     }
+    // TODO: Change this to be top level somehow
+    else if (!pb.authStore.isValid) {
+      pb.authStore.clear();
+      dispatch(logoutUser())
+      navigate("/")
+      return
+    }
     pb.collection('characters').getList(undefined, undefined, {
-      filter: `user_id = "${user.id}"`
+      filter: `name = 'Fucking What?'`
     }).then((value) => {
+      console.log(value)
       setCharacterData(value.items[0] as unknown as Character);
       setLoading(false)
     }).catch((err) => {
