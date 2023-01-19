@@ -1,17 +1,22 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import Skill from '../../types/skillType'
 
 import './child-skill-row.css'
 
 interface ChildSkillRowProps {
-  primaryStatLevel?: string,
+  primaryStatLevel: number,
   rootClassName: string,
-  skillLevel?: string,
-  skillMod?: string,
-  totalLevel?: string,
-  skillName?: string,
+  skill: Skill
 }
 
 const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
+  const [totalLevel, setTotalLevel] = useState<number>()
+  const calcTotalLevel = () => setTotalLevel(props.skill ? props.skill?.skillLevel + props.skill?.modifier + props.primaryStatLevel : props.primaryStatLevel)
+
+  useEffect(() => {
+    calcTotalLevel();
+  }, [props.skill, props.primaryStatLevel])
+
   return (
     <div className={`child-skill-row-container ${props.rootClassName} `}>
       <div className="child-skill-row-container01">
@@ -19,7 +24,7 @@ const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
           <input
             type="text"
             id="skill_name_input"
-            placeholder={props.skillName}
+            value={props.skill.name}
             className="child-skill-row-textinput input"
           />
           <div className="child-skill-row-container03">
@@ -33,7 +38,7 @@ const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
               <input
                 type="text"
                 id="stat_level_input"
-                placeholder={props.skillLevel}
+                value={props.skill.skillLevel}
                 className="child-skill-row-textinput1 input"
               />
               <span className="child-skill-row-text01">]</span>
@@ -50,7 +55,7 @@ const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
               <input
                 type="text"
                 id="stat_mod_input"
-                placeholder={props.skillMod}
+                value={props.skill.modifier}
                 className="child-skill-row-textinput2 input"
               />
               <span className="child-skill-row-text06">]</span>
@@ -60,7 +65,7 @@ const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
         <div className="child-skill-row-container08">
           <div className="child-skill-row-container09">
             <span className="child-skill-row-text07">[</span>
-            <span className="child-skill-row-text08">{props.totalLevel}</span>
+            <span className="child-skill-row-text08">{totalLevel}</span>
             <span className="child-skill-row-text09">]</span>
           </div>
         </div>
@@ -70,12 +75,8 @@ const ChildSkillRow:FC<ChildSkillRowProps> = (props) => {
 }
 
 ChildSkillRow.defaultProps = {
-  primaryStatLevel: '6',
+  primaryStatLevel: 6,
   rootClassName: '',
-  skillLevel: '1',
-  skillMod: '1',
-  totalLevel: '6',
-  skillName: '1',
 }
 
 export default ChildSkillRow

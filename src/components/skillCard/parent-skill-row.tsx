@@ -13,7 +13,7 @@ const ParentSkillRow:FC<ParentSkillRowProps> = (props) => {
     <div className={`parent-skill-row-container ${props.rootClassName} `}>
       <div className="parent-skill-row-container1">
         <div className="parent-skill-row-container2">
-          <span className="parent-skill-row-text">[ {props.primaryStatName} ]</span>
+          <span className="parent-skill-row-text">[{props.primaryStatName}]</span>
         </div>
         <div className="parent-skill-row-container3">
           <span className="parent-skill-row-text1">{props.skillName}</span>

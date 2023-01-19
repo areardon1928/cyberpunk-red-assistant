@@ -26,9 +26,25 @@ interface SkillCardProps {
   statLuckCurrent: number;
 }
 
+interface ChildListProps {
+  parentSkill: Skill
+}
 
 const SkillCard:FC<SkillCardProps> = (props) => {
   const [skillList, setSkillList] = useState<SkillList>();
+
+
+  const ChildList = (parentSkill:Skill) => {
+
+    const childSkills = []
+    for (const skillName in skillList) {
+      const skill = skillList[skillName as keyof SkillList] as Skill
+      if (skill.parentSkill === parentSkill.name) {
+        childSkills.push(skill)
+      }
+    }
+    return childSkills
+  }
 
   const updateSkillData = (skill: Skill, newSkill: boolean) => {
     if (!newSkill) {
@@ -48,6 +64,7 @@ const SkillCard:FC<SkillCardProps> = (props) => {
       pb.collection('characterSkills').update(skill.id, skill)
         .then(value => {
           console.log('Successfully updated skill, ', value)
+          console.log(skillList)
           setSkillList({...skillList, [value.name]: value as unknown as Skill} as SkillList)
         }).catch(err => {
           console.log(err)
@@ -76,7 +93,6 @@ const SkillCard:FC<SkillCardProps> = (props) => {
       value.items.forEach((skill) => {
         tempSkillList[skill.name] = skill
       })
-      console.log(tempSkillList)
       setSkillList(tempSkillList as SkillList)
     }).catch((err) => {
       console.log(err)
@@ -265,10 +281,12 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               skill={skillList?.gamble} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name1"
+              primaryStatName='INT'
+              skillName='language'
             ></ParentSkillRow>
-            <ChildSkillRow
-              rootClassName="child-skill-row-root-class-name"
-            ></ChildSkillRow>
+            {skillList?.language && ChildList(skillList.language).map((skill, i) => (
+              <ChildSkillRow rootClassName="child-skill-row-root-class-name2" skill={skill} primaryStatLevel={props.statInt}/>
+            ))}
             <SkillRow
               rootClassName="skill-row-root-class-name20"
               primaryStatName='INT'
@@ -277,16 +295,20 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               skill={skillList?.librarySearch} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name"
+              primaryStatName='INT'
+              skillName='local_expert'
             ></ParentSkillRow>
-            <ChildSkillRow
-              rootClassName="child-skill-row-root-class-name2"
-            ></ChildSkillRow>
+            {skillList?.localExpert && ChildList(skillList.localExpert).map((skill, i) => (
+              <ChildSkillRow rootClassName="child-skill-row-root-class-name2" skill={skill} primaryStatLevel={props.statInt} key={i}/>
+            ))}
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name2"
+              primaryStatName='INT'
+              skillName='science'
             ></ParentSkillRow>
-            <ChildSkillRow
-              rootClassName="child-skill-row-root-class-name1"
-            ></ChildSkillRow>
+            {skillList?.science && ChildList(skillList.science).map((skill, i) => (
+              <ChildSkillRow rootClassName="child-skill-row-root-class-name2" skill={skill} primaryStatLevel={props.statInt} key={i}/>
+            ))}
             <SkillRow
               rootClassName="skill-row-root-class-name22"
               primaryStatName='INT'
@@ -321,10 +343,12 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               skill={skillList?.evasion} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name6"
+              primaryStatName='TECH'
+              skillName='martial_arts (x2)'
             ></ParentSkillRow>
-            <ChildSkillRow
-              rootClassName="child-skill-row-root-class-name6"
-            ></ChildSkillRow>
+            {skillList?.martialArts && ChildList(skillList.martialArts).map((skill, i) => (
+              <ChildSkillRow rootClassName="child-skill-row-root-class-name2" skill={skill} primaryStatLevel={props.statDex} key={i}/>
+            ))}
             <SkillRow
               rootClassName="skill-row-root-class-name32"
               primaryStatName='DEX'
@@ -345,10 +369,12 @@ const SkillCard:FC<SkillCardProps> = (props) => {
               skill={skillList?.acting} updateSkillData={updateSkillData}            ></SkillRow>
             <ParentSkillRow
               rootClassName="parent-skill-row-root-class-name7"
+              primaryStatName='TECH'
+              skillName='play_instrument'
             ></ParentSkillRow>
-            <ChildSkillRow
-              rootClassName="child-skill-row-root-class-name7"
-            ></ChildSkillRow>
+            {skillList?.playInstrument && ChildList(skillList.playInstrument).map((skill, i) => (
+              <ChildSkillRow rootClassName="child-skill-row-root-class-name2" skill={skill} primaryStatLevel={props.statTech}/>
+            ))}
           </div>
           <div className="skill-card-ranged-weapon-skills">
             <SkillHeader
